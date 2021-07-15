@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 function Accelerometer() {
-const [value,setValue]=useState({x:0,y:0})
+const [value,setValue]=useState({x:0,z:0})
     const freq = 10;
     useEffect(()=>{
 let value=[];
