@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 function Accelerometer() {
-    const freq = 30;
+const [value,setValue]=useState({x:0,y:0})
+    const freq = 10;
     useEffect(()=>{
 let value=[];
         (async function(){
@@ -27,10 +28,10 @@ let value=[];
                         //   errorMessage.innerHTML = `Error: ${error.name}`;
                       });
                       acl.addEventListener("reading", () => {
-                        // x.innerHTML = acl.x;
-                        // y.innerHTML = acl.y;
-                        // z.innerHTML = acl.z;
-                        value.push([acl.x,acl.z]);
+                        setValue({
+                            x:acl.x,
+                            z:acl.z
+                        });
                       });
                       setInterval(()=>{
                         alert(value);
@@ -59,12 +60,8 @@ let value=[];
 
     return (
         <div>
-            Frequency: <span id="frequency"></span> <br />
-            Activated: <span id="activated"></span> <br />
-            X: <span id="x"></span><br />
-            Y: <span id="y"></span><br />
-            Z: <span id="z"></span><br />
-            Error: <span id="error"></span><br />
+<p>X : {value.x}</p>
+<p>Z : {value.z}</p>
         </div>
     )
 }
