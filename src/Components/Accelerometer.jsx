@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react'
 
 function Accelerometer() {
-    const [activated,setActivated]=useState(false);
-    // const [error,setError]=useState("");
-    const [z,setZ]=useState(0);
     const freq = 30;
-    const getData()=>{
-        let limit=0;
-        window.setInterval(() => {
-
-          }, 1000)
-    }
     useEffect(()=>{
+        const errorMessage = document.getElementById("error");
+        const frequency = document.getElementById("frequency");
+        const activated = document.getElementById("activated");
+        const x = document.getElementById("x");
+        const y = document.getElementById("y");
+        const z = document.getElementById("z");
         (async function(){
             try {
                 if ("Accelerometer" in window) {
@@ -20,26 +17,31 @@ function Accelerometer() {
                     });
                     if (state !== "granted") {
                         console.warn("You haven't granted permission to use the Accelerometer sensor");
+                        errorMessage.innerHTML = "Please grant the permissio to use sensors!";
                         alert("Please grant the permissio to use sensors!");
                         return;
                     }
     
                     const acl = new Accelerometer({ frequency: freq });
                     acl.addEventListener("activate", () => {
-                        setActivated(true);
+                        frequency.innerHTML = freq;
+                        activated.innerHTML = "True";
                       });
                       acl.addEventListener("error", (error) => {
                           console.error(`Error: ${error.name}`);
-                        alert(`Error: ${error.name}`);
+                          errorMessage.innerHTML = `Error: ${error.name}`;
                       });
                       acl.addEventListener("reading", () => {
-                        // z.innerHTML = acl.z;
+                        x.innerHTML = acl.x;
+                        y.innerHTML = acl.y;
+                        z.innerHTML = acl.z;
 
                       });
                       acl.start();
     
                 }else{
                     console.error("Sorry! Your browser doesn't support usage of sensors.");
+                    errorMessage.innerHTML = "Sorry! Your browser doesn't support usage of sensors.";
                     alert("Sorry! Your browser doesn't support usage of sensors.");
                 }
             } catch (error) {
@@ -58,7 +60,12 @@ function Accelerometer() {
 
     return (
         <div>
-            
+            Frequency: <span id="frequency"></span> <br />
+            Activated: <span id="activated"></span> <br />
+            X: <span id="x"></span><br />
+            Y: <span id="y"></span><br />
+            Z: <span id="z"></span><br />
+            Error: <span id="error"></span><br />
         </div>
     )
 }
