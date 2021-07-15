@@ -3,12 +3,7 @@ import React, { useEffect, useState } from 'react'
 function Accelerometer() {
     const freq = 30;
     useEffect(()=>{
-        const errorMessage = document.getElementById("error");
-        const frequency = document.getElementById("frequency");
-        const activated = document.getElementById("activated");
-        const x = document.getElementById("x");
-        const y = document.getElementById("y");
-        const z = document.getElementById("z");
+let value=[];
         (async function(){
             try {
                 if ("Accelerometer" in window) {
@@ -16,27 +11,31 @@ function Accelerometer() {
                         name: "accelerometer"
                     });
                     if (state !== "granted") {
-                        console.warn("You haven't granted permission to use the Accelerometer sensor");
-                        errorMessage.innerHTML = "Please grant the permissio to use sensors!";
-                        alert("Please grant the permissio to use sensors!");
+                        // console.warn("You haven't granted permission to use the Accelerometer sensor");
+                        // errorMessage.innerHTML = "Please grant the permissio to use sensors!";
+                        // alert("Please grant the permissio to use sensors!");
                         return;
                     }
     
                     const acl = new Accelerometer({ frequency: freq });
                     acl.addEventListener("activate", () => {
-                        frequency.innerHTML = freq;
-                        activated.innerHTML = "True";
+                        // frequency.innerHTML = freq;
+                        // activated.innerHTML = "True";
                       });
                       acl.addEventListener("error", (error) => {
-                          console.error(`Error: ${error.name}`);
-                          errorMessage.innerHTML = `Error: ${error.name}`;
+                        //   console.error(`Error: ${error.name}`);
+                        //   errorMessage.innerHTML = `Error: ${error.name}`;
                       });
                       acl.addEventListener("reading", () => {
-                        x.innerHTML = acl.x;
-                        y.innerHTML = acl.y;
-                        z.innerHTML = acl.z;
-
+                        // x.innerHTML = acl.x;
+                        // y.innerHTML = acl.y;
+                        // z.innerHTML = acl.z;
+                        value.push([acl.x,acl.z]);
                       });
+                      setInterval(()=>{
+                        alert(value);
+                        value=[];
+                      },1000)
                       acl.start();
     
                 }else{
