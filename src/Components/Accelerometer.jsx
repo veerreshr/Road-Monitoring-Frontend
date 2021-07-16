@@ -58,6 +58,7 @@ function AccelerometerComponent() {
             setValue([...value,{
               x: acl.x,
               z: acl.z,
+              timestamp:acl.timestamp
             }]);
           });
           if(start){
