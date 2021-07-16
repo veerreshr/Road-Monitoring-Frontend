@@ -4,11 +4,10 @@ import AlertComponent from './AlertComponent';
 function AccelerometerComponent() {
     const [error,setError]=useState("");
     const [active,setActive]=useState(false);
-    const [stop,setStop]=useState(false);
 const [value,setValue]=useState({x:0,z:0})
 const acl = new Accelerometer({ frequency: 30 });
     useEffect(()=>{
-        if(!stop){
+
             (async function(){
                 try {
                     if ("Accelerometer" in window) {
@@ -52,14 +51,10 @@ const acl = new Accelerometer({ frequency: 30 });
                     }
                 }
             }());
-        }
+
 
     },[])
 
-    const stopReading=()=>{
-        acl.stop();
-        setStop(true);
-    }
 
     return (
         <div>
@@ -67,7 +62,6 @@ const acl = new Accelerometer({ frequency: 30 });
             {active && <div>
                 <p>X : {value.x}</p>
                 <p>Z : {value.z}</p>
-                <button onClick={stopReading}>stop</button>
                 </div>}
         </div>
     );
