@@ -5,6 +5,7 @@ function AccelerometerComponent() {
     const [error,setError]=useState("");
     const [active,setActive]=useState(false);
 const [value,setValue]=useState({x:0,z:0})
+const acl = new Accelerometer({ frequency: 30 });
     useEffect(()=>{
         (async function(){
             try {
@@ -19,8 +20,6 @@ const [value,setValue]=useState({x:0,z:0})
                         alert("Please grant the permission to use sensors!");
                         return;
                     }
-    
-                    const acl = new Accelerometer({ frequency: 30 });
                     acl.addEventListener("activate", () => {
                         setActive(true);
                       });
@@ -54,12 +53,17 @@ const [value,setValue]=useState({x:0,z:0})
 
     },[])
 
+    const stopReading=()=>{
+        acl.stop();
+    }
+
     return (
         <div>
             {error && <AlertComponent data={error}/>}
             {active && <div>
                 <p>X : {value.x}</p>
                 <p>Z : {value.z}</p>
+                <button onClick={stopReading}>stop</button>
                 </div>}
         </div>
     );
