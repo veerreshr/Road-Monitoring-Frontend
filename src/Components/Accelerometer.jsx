@@ -13,7 +13,6 @@ const [value,setValue]=useState({x:0,z:0})
                         name: "accelerometer"
                     });
                     console.log(state);
-                    debugger;
                     if (state !== "granted") {
                         console.warn("You haven't granted permission to use the Accelerometer sensor");
                         setError("Please grant the permission to use sensors!");
@@ -21,7 +20,7 @@ const [value,setValue]=useState({x:0,z:0})
                         return;
                     }
     
-                    const acl = new Accelerometer({ frequency: 15 });
+                    const acl = new Accelerometer({ frequency: 30 });
                     acl.addEventListener("activate", () => {
                         setActive(true);
                       });
