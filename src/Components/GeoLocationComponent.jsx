@@ -4,7 +4,7 @@ function GeoLocationComponent() {
     const [error,setError]=useState("");
 
     const showPosition=(position)=>{
-        console.log(position)
+        // console.log(position)
     }
     const err=()=>{
         setError("Unable to retrieve your location");

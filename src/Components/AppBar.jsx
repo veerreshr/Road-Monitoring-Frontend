@@ -20,6 +20,7 @@ import AddToQueueIcon from '@material-ui/icons/AddToQueue';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useHistory } from "react-router-dom";
 import TuneIcon from '@material-ui/icons/Tune';
+import AssessmentIcon from '@material-ui/icons/Assessment';
 
 const drawerWidth = 240;
 
@@ -140,17 +141,23 @@ export default function AppBarComponent() {
               <ListItemIcon><HomeOutlined/></ListItemIcon>
               <ListItemText primary="Home" />
             </ListItem>
-            <ListItem button key="Test" onClick={()=>{
-              history.push("test")
+            <ListItem button key="Upload" onClick={()=>{
+              history.push("upload")
             }}>
               <ListItemIcon><AddToQueueIcon/></ListItemIcon>
-              <ListItemText primary="Test" />
+              <ListItemText primary="Upload" />
             </ListItem>
             <ListItem button key="ParameterTest" onClick={()=>{
               history.push("ptest")
             }}>
               <ListItemIcon><TuneIcon/></ListItemIcon>
               <ListItemText primary="Parameter Test" />
+            </ListItem>
+            <ListItem button key="testResult" onClick={()=>{
+              history.push("presult")
+            }}>
+              <ListItemIcon><AssessmentIcon/></ListItemIcon>
+              <ListItemText primary="Test Result" />
             </ListItem>
         </List>
         <Divider />
