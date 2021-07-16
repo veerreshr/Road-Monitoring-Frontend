@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import SensorCard from './SensorCard';
 import Accelerometer from './Accelerometer';
 
 function ParameterTest() {
