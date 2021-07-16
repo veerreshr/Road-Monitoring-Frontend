@@ -115,13 +115,12 @@ export default function AppBarComponent() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Persistent drawer
+            Analyzer
           </Typography>
         </Toolbar>
       </AppBar>
       <Drawer
         className={classes.drawer}
-        variant="persistent"
         anchor="left"
         open={open}
         classes={{
