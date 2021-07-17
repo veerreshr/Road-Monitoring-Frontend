@@ -21,6 +21,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useHistory } from "react-router-dom";
 import TuneIcon from '@material-ui/icons/Tune';
 import AssessmentIcon from '@material-ui/icons/Assessment';
+import StorageIcon from '@material-ui/icons/Storage';
 
 const drawerWidth = 240;
 
@@ -158,6 +159,12 @@ export default function AppBarComponent() {
             }}>
               <ListItemIcon><AssessmentIcon/></ListItemIcon>
               <ListItemText primary="Test Result" />
+            </ListItem>
+            <ListItem button key="deviceData" onClick={()=>{
+              history.push("devicedata")
+            }}>
+              <ListItemIcon><StorageIcon/></ListItemIcon>
+              <ListItemText primary="Device Data" />
             </ListItem>
         </List>
         <Divider />

@@ -47,7 +47,6 @@ function TestResult() {
       <Grid container spacing={3} className={classes.grid}>
         <Grid item xs={12} md={4}>
           <TextField
-            id="outlined-basic"
             label="Name"
             variant="outlined"
             className={classes.input}
@@ -60,7 +59,6 @@ function TestResult() {
         <Grid item xs={12} md={4}>
           {" "}
           <TextField
-            id="outlined-basic"
             label="Vehicle Name + Model"
             variant="outlined"
             className={classes.input}
@@ -72,13 +70,12 @@ function TestResult() {
         </Grid>
         <Grid item xs={12} md={4}>
           <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-outlined-label">
+            <InputLabel >
               Speed Range
             </InputLabel>
             <Select
               className={classes.input}
               labelId="demo-simple-select-outlined-label"
-              id="demo-simple-select-outlined"
               value={speed}
               onChange={(e) => {
                 setSpeed(e.target.value);
