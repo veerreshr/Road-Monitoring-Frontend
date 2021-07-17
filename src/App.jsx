@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import AppBarComponent from './Components/AppBar';
-import TabsComponent from './Components/TabsComponent';
-import BottomActionButtons from './Components/BottomActionButtons';
-
+import AppBarComponent from './Components/AppBar'
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import HomeScreen from './Screens/HomeScreen';
+import ParameterTest from './Components/ParameterTest';
+import TestResult from './Components/TestResult';
+import DeviceData from './Components/DeviceData';
 const App = () => {
-  const [count, setCount] = useState(0);
 
   return (
-    <div className="App">
+    <Router>
       <AppBarComponent/>
-      <TabsComponent/>
-      <BottomActionButtons/>
-    </div>
+      <Route path="/" component={HomeScreen} exact />
+      <Route path="/upload" component={HomeScreen} exact />
+      <Route path="/ptest" component={ParameterTest} exact/>
+      <Route path="/presult" component={TestResult} exact/>
+      <Route path="/devicedata" component={DeviceData} exact/>
+
+    </Router>
   );
 };
 
