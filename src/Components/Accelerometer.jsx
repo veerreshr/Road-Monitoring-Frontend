@@ -11,6 +11,8 @@ import React, {  useState } from "react";
 import AlertComponent from "./AlertComponent";
 import { makeStyles } from "@material-ui/core/styles";
 import firebase from  "../Utils/firebase"
+import { useCountdownTimer } from 'use-countdown-timer';
+
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -23,9 +25,17 @@ const useStyles = makeStyles((theme) => ({
   input: {
     width: "100%",
   },
+  countdown:{
+    fontSize:"2em"
+  }
 }));
 
 function AccelerometerComponent() {
+
+  const { countdown, start, reset, pause, isRunning } = useCountdownTimer({
+    timer: 1000 * 5,
+  });
+
   const classes = useStyles();
   const [error, setError] = useState("");
   const [active, setActive] = useState(false);
@@ -35,7 +45,7 @@ function AccelerometerComponent() {
   const [vehicle, setVehicle] = useState();
   const acl = new Accelerometer({ frequency: 30 });
 
-  const start = async () => {
+  const startReading = async () => {
     const ptestRef=firebase.database().ref(`pTest/${name}/${vehicle}/${speed}`);
     try {
       if ("Accelerometer" in window) {
@@ -73,6 +83,7 @@ function AccelerometerComponent() {
           acl.start();
         setTimeout(() => {
           acl.stop();
+          alert("Test Complete");
           // setValue(values)
         }, 10000);
       } else {
@@ -94,9 +105,14 @@ function AccelerometerComponent() {
     }
   };
 
+if(countdown==0){
+  startReading();
+}
+
   return (
     <div>
       {error && <AlertComponent data={error} />}
+      {!error && <div className={classes.countdown}>Start Countdown : {countdown}</div>}
       <Grid container spacing={3} className={classes.grid}>
         <Grid item xs={12} md={4}>
           <TextField
