@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import AppBarComponent from './Components/AppBar'
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router,HashRouter, Route } from "react-router-dom";
 import HomeScreen from './Screens/HomeScreen';
 import ParameterTest from './Components/ParameterTest';
 import TestResult from './Components/TestResult';
@@ -13,7 +13,7 @@ const App = () => {
 
   return (
     <StoreProvider store={store}>
-    <Router>
+    <HashRouter>
       <AppBarComponent/>
       <Route path="/" component={HomeScreen} exact />
       <Route path="/upload" component={UploadScreen} exact />
@@ -21,7 +21,7 @@ const App = () => {
       <Route path="/presult" component={TestResult} exact/>
       <Route path="/devicedata" component={DeviceData} exact/>
 
-    </Router>
+    </HashRouter>
     </StoreProvider>
   );
 };
