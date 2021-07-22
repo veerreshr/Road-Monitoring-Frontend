@@ -1,12 +1,10 @@
 import React from "react";
-import BottomActionButtons from "../Components/BottomActionButtons";
-import TabsComponent from "../Components/TabsComponent";
+import MapContainer from './../Components/MapComponent';
 
 function HomeScreen() {
   return (
     <div>
-      <TabsComponent />
-      <BottomActionButtons />
+      <MapContainer/>
     </div>
   );
 }

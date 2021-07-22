@@ -6,6 +6,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import UploadMap from "./UploadMap";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -20,7 +21,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+         {children}
         </Box>
       )}
     </div>
@@ -69,26 +70,17 @@ export default function SimpleTabs() {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        Display Map with few custom elements to mark on top of our college
-        location . Use 2 locations and draw a small line between them on top of
-        map. For custom data use any 2 points latitiude and longitude near our
-        college. ex point 1 : entrance gate, point 2: dwaraka restaurant
-        <br />
-        <br />
-        <strong>
-          Note : Create Separate Components for both tabs, dont directly code
-          here
-        </strong>
+        <UploadMap/>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Use any dummy data to display two line charts with both poitive and
-        negative values
-        <br />
-        <br />
-        <strong>
-          Note : Create Separate Components for both tabs, dont directly code
-          here
-        </strong>
+{/*           
+          
+          
+          Charts Here
+
+
+ */}
+
       </TabPanel>
     </div>
   );

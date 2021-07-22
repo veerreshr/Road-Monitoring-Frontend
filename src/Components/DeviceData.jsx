@@ -39,12 +39,12 @@ function DeviceData() {
           }
         } catch (err) {
           if (err.name === "SecurityError") {
-            console.log(
+            console.warn(
               "Sensor construction was blocked by the Permissions Policy."
             );
             setError("Sensor construction was blocked by the Permissions Policy.");
           } else if (err.name === "ReferenceError") {
-            console.log("Sensor is not supported by the User Agent.");
+            console.warn("Sensor is not supported by the User Agent.");
             setError("Sensor is not supported by the User Agent.");
           } else {
             throw err;

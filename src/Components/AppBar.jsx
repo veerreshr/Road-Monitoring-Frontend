@@ -117,7 +117,7 @@ export default function AppBarComponent() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Analyzer
+            Road Scan
           </Typography>
         </Toolbar>
       </AppBar>

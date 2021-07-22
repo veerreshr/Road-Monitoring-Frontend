@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import firebase from  "../Utils/firebase"
 import LineChartComponent from "./LineChartComponent";
+import Math from "./Math";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 function TestResult() {
   const classes = useStyles();
-  const [speed, setSpeed] = useState("");
+  const [speed, setSpeed] = useState(30);
   const [name, setName] = useState("");
   const [vehicle, setVehicle] = useState("");
 
@@ -35,7 +36,6 @@ function TestResult() {
 
   const ptestRef=firebase.database().ref(`pTest/${name}/${vehicle}/${speed}`);
   const getResults=()=>{
-    console.log(`pTest/${name}/${vehicle}/${speed}`)
     ptestRef.once('value', (data) => {
       const result=data.val();
       // do some stuff once
@@ -99,7 +99,10 @@ function TestResult() {
           </Button>
         </Grid>
       </Grid>
+      {/* <Math values={values}/> */}
+      <div style={{minHeight:"50vh"}}>
       <LineChartComponent values={values}/>
+      </div>
     </div>
   );
 }
