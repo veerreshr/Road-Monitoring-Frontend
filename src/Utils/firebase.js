@@ -1,13 +1,13 @@
 import firebase from "firebase";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCC-RRidhzHOc36FhIVJvUYjfzOuqdThAA",
-  authDomain: "road-monitoring-40614.firebaseapp.com",
-  projectId: "road-monitoring-40614",
-  storageBucket: "road-monitoring-40614.appspot.com",
-  messagingSenderId: "106343331000",
-  appId: "1:106343331000:web:7a837576a1c6d2596db04d",
-  measurementId: "G-851NNRXE12",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 firebase.initializeApp(firebaseConfig);

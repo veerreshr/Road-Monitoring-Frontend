@@ -7,12 +7,11 @@ import {
   Grid,
   Button,
 } from "@material-ui/core";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import AlertComponent from "./AlertComponent";
 import { makeStyles } from "@material-ui/core/styles";
-import firebase from  "../Utils/firebase"
-import { useCountdownTimer } from 'use-countdown-timer';
-
+import firebase from "../Utils/firebase";
+import { useCountdownTimer } from "use-countdown-timer";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -25,13 +24,12 @@ const useStyles = makeStyles((theme) => ({
   input: {
     width: "100%",
   },
-  countdown:{
-    fontSize:"2em"
-  }
+  countdown: {
+    fontSize: "2em",
+  },
 }));
 
 function AccelerometerComponent() {
-
   const { countdown, start, reset, pause, isRunning } = useCountdownTimer({
     timer: 1000 * 5,
   });
@@ -46,13 +44,14 @@ function AccelerometerComponent() {
   const acl = new Accelerometer({ frequency: 30 });
 
   const startReading = async () => {
-    const ptestRef=firebase.database().ref(`pTest/${name}/${vehicle}/${speed}`);
+    const ptestRef = firebase
+      .database()
+      .ref(`pTest/${name}/${vehicle}/${speed}`);
     try {
       if ("Accelerometer" in window) {
         const { state } = await navigator.permissions.query({
           name: "accelerometer",
         });
-        console.log(state);
         if (state !== "granted") {
           console.warn(
             "You haven't granted permission to use the Accelerometer sensor"
@@ -69,18 +68,13 @@ function AccelerometerComponent() {
         });
 
         acl.addEventListener("reading", () => {
-          console.log({
-            x:acl.x,
-            z:acl.z,
-            timestamp:acl.timestamp
-          });
           ptestRef.push({
-            x:acl.x,
-            z:acl.z,
-            timestamp:acl.timestamp
+            x: acl.x,
+            z: acl.z,
+            timestamp: acl.timestamp,
           });
         });
-          acl.start();
+        acl.start();
         setTimeout(() => {
           acl.stop();
           alert("Test Complete");
@@ -92,12 +86,12 @@ function AccelerometerComponent() {
       }
     } catch (err) {
       if (err.name === "SecurityError") {
-        console.log(
+        console.warn(
           "Sensor construction was blocked by the Permissions Policy."
         );
         setError("Sensor construction was blocked by the Permissions Policy.");
       } else if (err.name === "ReferenceError") {
-        console.log("Sensor is not supported by the User Agent.");
+        console.warn("Sensor is not supported by the User Agent.");
         setError("Sensor is not supported by the User Agent.");
       } else {
         throw err;
@@ -105,14 +99,16 @@ function AccelerometerComponent() {
     }
   };
 
-if(countdown==0){
-  startReading();
-}
+  if (countdown == 0) {
+    startReading();
+  }
 
   return (
     <div>
       {error && <AlertComponent data={error} />}
-      {!error && <div className={classes.countdown}>Start Countdown : {countdown}</div>}
+      {!error && (
+        <div className={classes.countdown}>Start Countdown : {countdown}</div>
+      )}
       <Grid container spacing={3} className={classes.grid}>
         <Grid item xs={12} md={4}>
           <TextField
@@ -139,9 +135,7 @@ if(countdown==0){
         </Grid>
         <Grid item xs={12} md={4}>
           <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel >
-              Speed Range
-            </InputLabel>
+            <InputLabel>Speed Range</InputLabel>
             <Select
               className={classes.input}
               labelId="demo-simple-select-outlined-label"
@@ -158,7 +152,12 @@ if(countdown==0){
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" className={classes.input} onClick={start}>
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.input}
+            onClick={start}
+          >
             Start Recording
           </Button>
         </Grid>
