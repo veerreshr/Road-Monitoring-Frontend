@@ -13,7 +13,7 @@ const App = () => {
 
   return (
     <StoreProvider store={store}>
-    <HashRouter>
+    <Router>
       <AppBarComponent/>
       <Route path="/" component={HomeScreen} exact />
       <Route path="/upload" component={UploadScreen} exact />
@@ -21,7 +21,7 @@ const App = () => {
       <Route path="/presult" component={TestResult} exact/>
       <Route path="/devicedata" component={DeviceData} exact/>
 
-    </HashRouter>
+    </Router>
     </StoreProvider>
   );
 };
