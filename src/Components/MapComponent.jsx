@@ -78,21 +78,24 @@ function MapContainer() {
         center={currentPosition}
       >
         {currentPosition.lat && <Marker position={currentPosition} />}
-        {pathCoordinates && (
+        {currentPosition.lat && (
           <Polyline
             path={pathCoordinates}
-            geodesic={true}
+            // geodesic={true}
             options={{
-              strokeColor: "#ff2527",
-              strokeOpacity: 0.75,
+              strokeColor: '#FF0000',
+              strokeOpacity: 0.8,
               strokeWeight: 2,
-              // icons: [
-              //   {
-              //     icon: lineSymbol,
-              //     offset: "0",
-              //     repeat: "20px",
-              //   },
-              // ],
+              fillColor: '#FF0000',
+              fillOpacity: 0.35,
+              clickable: false,
+              draggable: false,
+              editable: false,
+              visible: true,
+              radius: 30000,
+              paths:{pathCoordinates},
+              zIndex: 1
+            
             }}
           />
         )}

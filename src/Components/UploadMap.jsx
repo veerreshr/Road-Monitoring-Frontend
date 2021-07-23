@@ -132,15 +132,20 @@ function UploadMap() {
         center={currentPosition || { lat: 20.5937, lng: 78.9629 }}
       >
         {currentPosition.lat && <Marker position={currentPosition} />}
-        {pathCoordinates && (
+        {currentPosition.lat && (
           <Polyline
             path={pathCoordinates}
             geodesic={true}
             options={{
-              strokeColor: "#ff2527",
-              strokeOpacity: 0.75,
-              strokeWeight: 2,
-            }}
+              path: {pathCoordinates},
+              strokeColor: '#00ffff',
+              strokeOpacity: 1,
+              strokeWeight: 6,
+              icons: [{
+                  offset: '0',
+                  repeat: '10px'
+              }],
+          }}
           />
         )}
         {potholes.length > 0 &&
