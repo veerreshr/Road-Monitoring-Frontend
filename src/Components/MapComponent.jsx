@@ -8,11 +8,11 @@ import {
 import React, { useEffect, useState } from "react";
 import firebase from './../Utils/firebase';
 
-function MapContainer() {
+function MapContainer({start}) {
   const potholeRef = firebase.database().ref("annomalies/potholes");
 
   const mapStyles = {
-    height: "90vh",
+    height: "75vh",
     width: "100%",
   };
   const [potholes, setPotholes] = useState([]);
@@ -24,7 +24,9 @@ function MapContainer() {
       lat: position.coords.latitude,
       lng: position.coords.longitude,
     };
-    pushToPathCoordinates(currentPos);
+    if(start){
+      pushToPathCoordinates(currentPos);
+    }
     setCurrentPosition(currentPos);
   };
   const error = (err) => {
@@ -68,7 +70,7 @@ function MapContainer() {
     return () =>{ navigator.geolocation.clearWatch(id);
       potholeRef.off();
     }
-  }, []);
+  }, [start]);
 
   return (
     <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
@@ -77,28 +79,28 @@ function MapContainer() {
         zoom={18}
         center={currentPosition}
       >
-        {currentPosition.lat && <Marker position={currentPosition} />}
         {currentPosition.lat && (
           <Polyline
             path={pathCoordinates}
             // geodesic={true}
             options={{
-              strokeColor: '#FF0000',
+              strokeColor: '#0000FF',
               strokeOpacity: 0.8,
               strokeWeight: 2,
-              fillColor: '#FF0000',
+              fillColor: '#0000FF',
               fillOpacity: 0.35,
-              clickable: false,
-              draggable: false,
-              editable: false,
-              visible: true,
-              radius: 30000,
+              // clickable: false,
+              // draggable: false,
+              // editable: false,
+              // visible: true,
+              // radius: 30000,
               paths:{pathCoordinates},
-              zIndex: 1
+              zIndex: 0
             
             }}
           />
         )}
+        {currentPosition.lat && <Marker position={currentPosition} />}
         {potholes.length > 0 &&
           potholes.map((pothole,i) => (
             <Circle
