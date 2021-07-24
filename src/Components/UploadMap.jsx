@@ -27,8 +27,7 @@ function UploadMap() {
     const currentPos = {
       lat: position.coords.latitude,
       lng: position.coords.longitude,
-    };
-    pushToPathCoordinates(currentPos);
+    }; 
     setCurrentPosition(currentPos);
   };
   const error = (err) => {
@@ -112,18 +111,40 @@ function UploadMap() {
             key:snap.key
         }));
       });
-    if (start) {
-      startReadingAccelerometer();
-    } else {
-      accelerometer.stop();
-    }
     return () => {
       navigator.geolocation.clearWatch(id);
       uploadRef.off();
       accelerometer.stop();
     };
-  }, [start]);
+  }, []);
 
+  const successPath = (position) => {
+    if (start) {
+      const currentPos = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+      pushToPathCoordinates(currentPos);
+    } else {
+      setPathCoordinates([]);
+    }
+  };
+  useEffect(() => {
+    if (start) {
+      startReadingAccelerometer();
+    } else {
+      accelerometer.stop();
+    }
+    const id = navigator.geolocation.watchPosition(successPath, error, {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0,
+    });
+    return () => {
+      navigator.geolocation.clearWatch(id);
+      clearInterval(checkfornearbypotholes);
+    };
+  }, [start]);
   return (
     <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <GoogleMap
@@ -131,8 +152,7 @@ function UploadMap() {
         zoom={18}
         center={currentPosition || { lat: 20.5937, lng: 78.9629 }}
       >
-        {currentPosition.lat && <Marker position={currentPosition} />}
-        {currentPosition.lat && (
+          {pathCoordinates.length>0 && (
           <Polyline
             path={pathCoordinates}
             geodesic={true}
@@ -148,6 +168,7 @@ function UploadMap() {
           }}
           />
         )}
+        {currentPosition.lat && <Marker position={currentPosition} />}
         {potholes.length > 0 &&
           potholes.map((pothole,i) => (
             <Circle
