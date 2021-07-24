@@ -46,7 +46,7 @@ function MapContainer() {
   };
 
   const pushToPathCoordinates = (currentPos) => {
-    let pathco = pathCoordinates;
+    let pathco = [...pathCoordinates];
     pathco.push(currentPos);
     setPathCoordinates(pathco);
   };
@@ -115,17 +115,17 @@ function MapContainer() {
   const successPath = (position) => {
     if (start) {
       const currentPos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
+        lat: parseFloat(position.coords.latitude),
+        lng: parseFloat(position.coords.longitude),
       };
       pushToPathCoordinates(currentPos);
     } else {
-      setPathCoordinates([]);
+      // setPathCoordinates([]);
     }
   };
 
   useEffect(() => {
-    console.log(pathCoordinates)
+    console.log(pathCoordinates);
     const checkfornearbypotholes = setInterval(() => {
       if (start) {
         for (let pothole of potholes) {
@@ -149,6 +149,24 @@ function MapContainer() {
       clearInterval(checkfornearbypotholes);
     };
   }, [start]);
+
+  const options = {
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#FF0000',
+    fillOpacity: 0.35,
+    clickable: false,
+    draggable: false,
+    editable: false,
+    visible: true,
+    radius: 30000,
+    paths:{pathCoordinates},
+    zIndex: 1
+  };
+  const onLoad = polyline => {
+    console.log('polyline: ', polyline)
+  };
   return (
     <>
       <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
@@ -157,20 +175,11 @@ function MapContainer() {
           zoom={18}
           center={currentPosition}
         >
-          {pathCoordinates && (
+          {pathCoordinates.length > 0 && (
             <Polyline
-              path={pathCoordinates}
-              geodesic={true}
-              options={{
-                path: {pathCoordinates},
-                strokeColor: '#00ffff',
-                strokeOpacity: 1,
-                strokeWeight: 6,
-                icons: [{
-                    offset: '0',
-                    repeat: '10px'
-                }],
-            }}
+            onLoad={onLoad}
+            path={pathCoordinates}
+            options={options}
             />
           )}
           {currentPosition.lat && <Marker position={currentPosition} />}

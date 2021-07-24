@@ -35,7 +35,7 @@ function UploadMap() {
   };
 
   const pushToPathCoordinates = (currentPos) => {
-    let pathco = pathCoordinates;
+    let pathco =[...pathCoordinates] ;
     pathco.push(currentPos);
     setPathCoordinates(pathco);
   };
@@ -82,7 +82,23 @@ function UploadMap() {
       }
     }
   };
-
+  const options = {
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#FF0000',
+    fillOpacity: 0.35,
+    clickable: false,
+    draggable: false,
+    editable: false,
+    visible: true,
+    radius: 30000,
+    paths:{pathCoordinates},
+    zIndex: 1
+  };
+  const onLoad = polyline => {
+    console.log('polyline: ', polyline)
+  };
   useEffect(() => {
     const id = navigator.geolocation.watchPosition(success, error, {
       enableHighAccuracy: true,
@@ -126,7 +142,7 @@ function UploadMap() {
       };
       pushToPathCoordinates(currentPos);
     } else {
-      setPathCoordinates([]);
+      // setPathCoordinates([]);
     }
   };
   useEffect(() => {
@@ -152,20 +168,11 @@ function UploadMap() {
         zoom={18}
         center={currentPosition || { lat: 20.5937, lng: 78.9629 }}
       >
-          {pathCoordinates.length>0 && (
+          {pathCoordinates && (
           <Polyline
-            path={pathCoordinates}
-            geodesic={true}
-            options={{
-              path: {pathCoordinates},
-              strokeColor: '#00ffff',
-              strokeOpacity: 1,
-              strokeWeight: 6,
-              icons: [{
-                  offset: '0',
-                  repeat: '10px'
-              }],
-          }}
+          onLoad={onLoad}
+          path={pathCoordinates}
+          options={options}
           />
         )}
         {currentPosition.lat && <Marker position={currentPosition} />}
