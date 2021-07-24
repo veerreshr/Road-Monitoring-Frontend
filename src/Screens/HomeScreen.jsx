@@ -1,12 +1,8 @@
-import React from "react";
-import MapContainer from './../Components/MapComponent';
+import React, { useState } from "react";
+import MapContainer from "./../Components/MapComponent";
 
 function HomeScreen() {
-  return (
-    <div>
-      <MapContainer/>
-    </div>
-  );
+  return <MapContainer />;
 }
 
 export default HomeScreen;
