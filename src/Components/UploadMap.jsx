@@ -18,16 +18,16 @@ function UploadMap() {
     height: "75vh",
     width: "100%",
   };
-
+  const [load, setLoad] = useState(false);
   const [potholes, setPotholes] = useState([]);
   const [currentPosition, setCurrentPosition] = useState({});
   const [pathCoordinates, setPathCoordinates] = useState([]);
 
   const success = (position) => {
     const currentPos = {
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-    }; 
+      lat:parseFloat( position.coords.latitude),
+      lng:parseFloat( position.coords.longitude)
+    };
     setCurrentPosition(currentPos);
   };
   const error = (err) => {
@@ -35,7 +35,7 @@ function UploadMap() {
   };
 
   const pushToPathCoordinates = (currentPos) => {
-    let pathco =[...pathCoordinates] ;
+    let pathco = [...pathCoordinates];
     pathco.push(currentPos);
     setPathCoordinates(pathco);
   };
@@ -82,51 +82,54 @@ function UploadMap() {
       }
     }
   };
-  const options = {
-    strokeColor: '#FF0000',
+  const polylineOptions = {
+    strokeColor: "#FF0000",
     strokeOpacity: 0.8,
     strokeWeight: 2,
-    fillColor: '#FF0000',
+    fillColor: "#FF0000",
     fillOpacity: 0.35,
     clickable: false,
     draggable: false,
     editable: false,
     visible: true,
     radius: 30000,
-    paths:{pathCoordinates},
-    zIndex: 1
+    paths: { pathCoordinates },
+    zIndex: 5,
   };
-  const onLoad = polyline => {
-    console.log('polyline: ', polyline)
+  const onLoad = (polyline) => {
+    console.log("polyline: ", polyline.paths);
   };
   useEffect(() => {
+    setLoad(true);
     const id = navigator.geolocation.watchPosition(success, error, {
       enableHighAccuracy: true,
       timeout: 5000,
       maximumAge: 0,
     });
     uploadRef.once("value", (snap) => {
-        let data=snap.val()
+      let data = snap.val();
       let temp = [];
       for (let key in data) {
         if (data.hasOwnProperty(key)) {
           temp.push({
             lat: data[key].lat,
             lng: data[key].lng,
-            key:key
+            key: key,
           });
         }
       }
       setPotholes(temp);
     });
-    uploadRef.on('child_added', (snap, prevChildKey) => {
-        let data=snap.val()
-        setPotholes(prev=>prev.concat({
-            lat: data.lat,
-            lng: data.lng,
-            key:snap.key
-        }));
-      });
+    uploadRef.on("child_added", (snap, prevChildKey) => {
+      let data = snap.val();
+      setPotholes((prev) =>
+        prev.concat({
+          lat: data.lat,
+          lng: data.lng,
+          key: snap.key,
+        })
+      );
+    });
     return () => {
       navigator.geolocation.clearWatch(id);
       uploadRef.off();
@@ -137,15 +140,26 @@ function UploadMap() {
   const successPath = (position) => {
     if (start) {
       const currentPos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
+        lat:parseFloat( position.coords.latitude),
+        lng: parseFloat(position.coords.longitude)
       };
       pushToPathCoordinates(currentPos);
     } else {
-      // setPathCoordinates([]);
+      setPathCoordinates([]);
     }
   };
+
+  const po = React.useMemo(() => {
+    try {
+      return JSON.parse(polylineOptions)
+    } catch (e) {
+      return polylineOptions
+    }
+  }, [polylineOptions])
+
+
   useEffect(() => {
+    console.log(pathCoordinates);
     if (start) {
       startReadingAccelerometer();
     } else {
@@ -158,44 +172,46 @@ function UploadMap() {
     });
     return () => {
       navigator.geolocation.clearWatch(id);
-      clearInterval(checkfornearbypotholes);
     };
   }, [start]);
   return (
-    <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-      <GoogleMap
-        mapContainerStyle={mapStyles}
-        zoom={18}
-        center={currentPosition || { lat: 20.5937, lng: 78.9629 }}
-      >
-          {pathCoordinates && (
-          <Polyline
-          onLoad={onLoad}
-          path={pathCoordinates}
-          options={options}
-          />
-        )}
-        {currentPosition.lat && <Marker position={currentPosition} />}
-        {potholes.length > 0 &&
-          potholes.map((pothole,i) => (
-            <Circle
-            key={pothole.key+" "+i}
-              options={{
-                center: { 
-                    lat:parseFloat( pothole.lat),
-                    lng:parseFloat( pothole.lng),
-                 },
-                radius: 4,
-                strokeColor: "#FF0000",
-                strokeOpacity: 1,
-                strokeWeight: 2,
-                fillColor: "#FF0000",
-                fillOpacity: 0.8,
-              }}
-            />
-          ))}
-      </GoogleMap>
-    </LoadScript>
+    <>
+      {load && (
+        <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+          <GoogleMap
+            mapContainerStyle={mapStyles}
+            zoom={18}
+            center={currentPosition || { lat: 20.5937, lng: 78.9629 }}
+          >
+            {pathCoordinates && (
+              <Polyline
+              onLoad={onLoad}
+              path={pathCoordinates} options={po}
+              />
+            )}
+            {currentPosition.lat && <Marker position={currentPosition} />}
+            {potholes.length > 0 &&
+              potholes.map((pothole, i) => (
+                <Circle
+                  key={pothole.key + " " + i}
+                  options={{
+                    center: {
+                      lat: parseFloat(pothole.lat),
+                      lng: parseFloat(pothole.lng),
+                    },
+                    radius: 4,
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 1,
+                    strokeWeight: 2,
+                    fillColor: "#FF0000",
+                    fillOpacity: 0.8,
+                  }}
+                />
+              ))}
+          </GoogleMap>
+        </LoadScript>
+      )}
+    </>
   );
 }
 
