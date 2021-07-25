@@ -120,7 +120,7 @@ function MapContainer() {
       };
       pushToPathCoordinates(currentPos);
     } else {
-      // setPathCoordinates([]);
+      setPathCoordinates([]);
     }
   };
 
