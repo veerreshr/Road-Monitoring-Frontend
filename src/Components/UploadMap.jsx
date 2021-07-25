@@ -82,6 +82,7 @@ function UploadMap() {
       }
     }
   };
+
   const polylineOptions = {
     strokeColor: "#FF0000",
     strokeOpacity: 0.8,
@@ -120,6 +121,7 @@ function UploadMap() {
       }
       setPotholes(temp);
     });
+    
     uploadRef.on("child_added", (snap, prevChildKey) => {
       let data = snap.val();
       setPotholes((prev) =>
@@ -159,7 +161,6 @@ function UploadMap() {
 
 
   useEffect(() => {
-    console.log(pathCoordinates);
     if (start) {
       startReadingAccelerometer();
     } else {
