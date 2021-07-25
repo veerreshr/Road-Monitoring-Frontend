@@ -3,14 +3,13 @@ import {
   Marker,
   LoadScript,
   Polyline,
-  Circle,
+  Circle,useJsApiLoader 
 } from "@react-google-maps/api";
 import React, { useEffect, useState } from "react";
 import firebase from "./../Utils/firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-
 const useStyles = makeStyles((theme) => ({
   buttonsContainer: {
     marginTop: "0.5em",
@@ -21,6 +20,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function MapContainer() {
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey:"AIzaSyCnVbwuPG-nQ_wEjpKIgLO_eJjCeuIzZUU"
+  })
+  const [map, setMap] = React.useState(null)
+
+  const onLoad = React.useCallback(function callback(map) {
+    const bounds = new window.google.maps.LatLngBounds();
+    map.fitBounds(bounds);
+    setMap(map)
+  }, [])
+
+  const onUnmount = React.useCallback(function callback(map) {
+    setMap(null)
+  }, [])
+
   const classes = useStyles();
 
   const potholeRef = firebase.database().ref("annomalies/potholes");
@@ -47,25 +62,23 @@ function MapContainer() {
 
   const pushToPathCoordinates = (currentPos) => {
     let pathco = [...pathCoordinates];
-    pathco.push(currentPos);
+    pathco.push(new window.google.maps.LatLng(currentPos.lat,currentPos.lng));
     setPathCoordinates(pathco);
   };
 
-  const distance = (coords1, coords2) => {
-    const { lat: lat1, lng: lon1 } = coords1;
-    const { lat: lat2, lng: lon2 } = coords2;
-    const degToRad = (x) => (x * Math.PI) / 180;
-    const R = 6371;
-    const halfDLat = degToRad(lat2 - lat1) / 2;
-    const halfDLon = degToRad(lon2 - lon1) / 2;
-    const a =
-      Math.sin(halfDLat) * Math.sin(halfDLat) +
-      Math.cos(degToRad(lat1)) *
-        Math.cos(degToRad(lat2)) *
-        Math.sin(halfDLon) *
-        Math.sin(halfDLon);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
+  const rad = function(x) {
+    return x * Math.PI / 180;
+  };
+
+  const distance = (p1, p2) => {
+    let R = 6378137; // Earth’s mean radius in meter
+    let dLat = rad(p2.lat - p1.lat);
+    let dLong = rad(p2.lng - p1.lng);
+    let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
+      Math.sin(dLong / 2) * Math.sin(dLong / 2);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // returns the distance in meter
   };
   const beep = new Audio(
     "https://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/pause.wav"
@@ -125,14 +138,19 @@ function MapContainer() {
   };
 
   useEffect(() => {
-    console.log(pathCoordinates);
+    console.log(pathCoordinates)
     const checkfornearbypotholes = setInterval(() => {
       if (start) {
+        let found=false;
         for (let pothole of potholes) {
-          if (distance(pothole, currentPosition) < 100) {
+          if (distance(pothole, currentPosition) < 50) {
             playAudio();
+            found=true;
             break;
           }
+        }
+        if(!found){
+          beep.pause();
         }
       } else {
         beep.pause();
@@ -164,20 +182,19 @@ function MapContainer() {
     paths:{pathCoordinates},
     zIndex: 1
   };
-  const onLoad = polyline => {
-    console.log('polyline: ', polyline)
-  };
+
   return (
     <>
-      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-        <GoogleMap
+      {isLoaded && currentPosition.lat? (
+      <GoogleMap
           mapContainerStyle={mapStyles}
           zoom={18}
           center={currentPosition}
+          // onLoad={onLoad}
+          onUnmount={onUnmount}
         >
           {pathCoordinates.length > 0 && (
             <Polyline
-            onLoad={onLoad}
             path={pathCoordinates}
             options={options}
             />
@@ -192,7 +209,7 @@ function MapContainer() {
                     lat: parseFloat(pothole.lat),
                     lng: parseFloat(pothole.lng),
                   },
-                  radius: 4,
+                  radius: 3,
                   strokeColor: "#FF0000",
                   strokeOpacity: 1,
                   strokeWeight: 2,
@@ -202,7 +219,7 @@ function MapContainer() {
               />
             ))}
         </GoogleMap>
-      </LoadScript>
+      ):<></>}
       Status: {start ? "Running" : "Stopped"}
       <Grid container spacing={2} className={classes.buttonsContainer}>
         <Grid item xs={6}>
