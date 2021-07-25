@@ -18,7 +18,6 @@ function UploadMap() {
     height: "75vh",
     width: "100%",
   };
-  const [load, setLoad] = useState(false);
   const [potholes, setPotholes] = useState([]);
   const [currentPosition, setCurrentPosition] = useState({});
   const [pathCoordinates, setPathCoordinates] = useState([]);
@@ -36,7 +35,7 @@ function UploadMap() {
 
   const pushToPathCoordinates = (currentPos) => {
     let pathco = [...pathCoordinates];
-    pathco.push(currentPos);
+    pathco.push(new window.google.maps.LatLng(currentPos.lat,currentPos.lng));
     setPathCoordinates(pathco);
   };
   const startReadingAccelerometer = async () => {
@@ -101,7 +100,6 @@ function UploadMap() {
     console.log("polyline: ", polyline.paths);
   };
   useEffect(() => {
-    setLoad(true);
     const id = navigator.geolocation.watchPosition(success, error, {
       enableHighAccuracy: true,
       timeout: 5000,
@@ -151,15 +149,6 @@ function UploadMap() {
     }
   };
 
-  const po = React.useMemo(() => {
-    try {
-      return JSON.parse(polylineOptions)
-    } catch (e) {
-      return polylineOptions
-    }
-  }, [polylineOptions])
-
-
   useEffect(() => {
     if (start) {
       startReadingAccelerometer();
@@ -177,19 +166,23 @@ function UploadMap() {
   }, [start]);
   return (
     <>
-      {load && (
+      {currentPosition.lat && (
         <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
           <GoogleMap
             mapContainerStyle={mapStyles}
             zoom={18}
             center={currentPosition || { lat: 20.5937, lng: 78.9629 }}
           >
-            {pathCoordinates && (
-              <Polyline
-              onLoad={onLoad}
-              path={pathCoordinates} options={po}
-              />
-            )}
+             {pathCoordinates.length > 0 && (
+            <Polyline
+            onLoad={onLoad}
+            path={pathCoordinates}
+            strokeColor= "#000000"
+            // strokeOpacity= "1.0"
+            // strokeWeight= "4"
+            // options={options}
+            />
+          )}
             {currentPosition.lat && <Marker position={currentPosition} />}
             {potholes.length > 0 &&
               potholes.map((pothole, i) => (

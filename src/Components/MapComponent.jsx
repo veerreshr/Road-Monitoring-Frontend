@@ -127,7 +127,7 @@ function MapContainer() {
       if (start) {
         let found=false;
         for (let pothole of potholes) {
-          if (distance(pothole, currentPosition) < 20) {
+          if (distance(pothole, currentPosition) < 30) {
             playAudio();
             found=true;
             break;
@@ -139,7 +139,7 @@ function MapContainer() {
       } else {
         beep.pause();
       }
-    }, 1000);
+    }, 500);
 
     const id = navigator.geolocation.watchPosition(successPath, error, {
       enableHighAccuracy: true,
