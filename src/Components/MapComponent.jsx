@@ -3,13 +3,14 @@ import {
   Marker,
   LoadScript,
   Polyline,
-  Circle,useJsApiLoader 
+  Circle,
 } from "@react-google-maps/api";
 import React, { useEffect, useState } from "react";
 import firebase from "./../Utils/firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+
 const useStyles = makeStyles((theme) => ({
   buttonsContainer: {
     marginTop: "0.5em",
@@ -20,22 +21,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function MapContainer() {
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey:"AIzaSyCnVbwuPG-nQ_wEjpKIgLO_eJjCeuIzZUU"
-  })
-  const [map, setMap] = React.useState(null)
-
-  const onLoad = React.useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds();
-    map.fitBounds(bounds);
-    setMap(map)
-  }, [])
-
-  const onUnmount = React.useCallback(function callback(map) {
-    setMap(null)
-  }, [])
-
   const classes = useStyles();
 
   const potholeRef = firebase.database().ref("annomalies/potholes");
@@ -138,12 +123,11 @@ function MapContainer() {
   };
 
   useEffect(() => {
-    console.log(pathCoordinates)
     const checkfornearbypotholes = setInterval(() => {
       if (start) {
         let found=false;
         for (let pothole of potholes) {
-          if (distance(pothole, currentPosition) < 50) {
+          if (distance(pothole, currentPosition) < 20) {
             playAudio();
             found=true;
             break;
@@ -182,19 +166,20 @@ function MapContainer() {
     paths:{pathCoordinates},
     zIndex: 1
   };
-
+  const onLoad = polyline => {
+    console.log('polyline: ', polyline)
+  };
   return (
     <>
-      {isLoaded && currentPosition.lat? (
-      <GoogleMap
+      <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+        <GoogleMap
           mapContainerStyle={mapStyles}
           zoom={18}
           center={currentPosition}
-          // onLoad={onLoad}
-          onUnmount={onUnmount}
         >
           {pathCoordinates.length > 0 && (
             <Polyline
+            onLoad={onLoad}
             path={pathCoordinates}
             options={options}
             />
@@ -209,7 +194,7 @@ function MapContainer() {
                     lat: parseFloat(pothole.lat),
                     lng: parseFloat(pothole.lng),
                   },
-                  radius: 3,
+                  radius: 4,
                   strokeColor: "#FF0000",
                   strokeOpacity: 1,
                   strokeWeight: 2,
@@ -219,7 +204,7 @@ function MapContainer() {
               />
             ))}
         </GoogleMap>
-      ):<></>}
+      </LoadScript>
       Status: {start ? "Running" : "Stopped"}
       <Grid container spacing={2} className={classes.buttonsContainer}>
         <Grid item xs={6}>
