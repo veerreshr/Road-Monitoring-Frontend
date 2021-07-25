@@ -150,7 +150,7 @@ function MapContainer() {
       navigator.geolocation.clearWatch(id);
       clearInterval(checkfornearbypotholes);
     };
-  }, [start]);
+  }, [start,currentPosition]);
 
   const options = {
     strokeColor: '#FF0000',
@@ -181,7 +181,7 @@ function MapContainer() {
             <Polyline
             onLoad={onLoad}
             path={pathCoordinates}
-            options={options}
+            // options={options}
             />
           )}
           {currentPosition.lat && <Marker position={currentPosition} />}
