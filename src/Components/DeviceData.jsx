@@ -7,7 +7,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
 red:{
-  background:"red"
+  background:"red",
+  margin:"0.5rem"
+},
+normal:{
+  margin:"0.5rem"
 }
 });
 
@@ -72,29 +76,22 @@ function DeviceData() {
     <div>
       {error && <AlertComponent data={error} />}
       {active && (
-        <Card className={(values[2]>9.8 || values[2]<9.5)?classes.red:" "}>
+        <Card className={(values[2]>9.8 || values[2]<9.5)?classes.red:classes.normal}>
           <CardContent>
             <Typography variant="h5" component="h2">
               Accelerometer Sensor Data
             </Typography>
             <Typography variant="body2" component="p">
-              X-axis Acceleration : {values[0]}
+              X-axis Acceleration(gm/s2) : {values[0]}
               <br />
-              Y-axis Acceleration : {values[1]}
+              Y-axis Acceleration(gm/s2) : {values[1]}
               <br />
-              Z-axis Acceleration : {values[2]}
+              Z-axis Acceleration(gm/s2) : {values[2]}
               <br/>
               Timestamp: {values[3]} 
             </Typography>
           </CardContent>
         </Card>
-      )}
-      {active && (
-        <div>
-          X: {values[0]} <br />
-          Z: {values[1]} <br />
-          Timestamp: {values[2]} <br />
-        </div>
       )}
     </div>
   );
